@@ -1,0 +1,121 @@
+{
+  "name": "Yang's Smokehouse",
+  "nameCn": "杨记烤肉",
+  "url": "https://www.yangsmokeco.com",
+  "phone": "(972) 730-6961",
+  "phoneE164": "+19727306961",
+  "email": "yangsmokehouse@gmail.com",
+  "address": {
+    "street": "240 Legacy Dr #306",
+    "city": "Plano",
+    "region": "TX",
+    "zip": "75023",
+    "country": "US",
+    "landmark": "Suite 306 in the shopping center on Legacy Drive, just east of Chase Oaks Blvd"
+  },
+  "geo": {
+    "lat": 33.0672788,
+    "lng": -96.6961546
+  },
+  "timezone": "America/Chicago",
+  "hours": [
+    {
+      "day": "Monday",
+      "short": "Mo",
+      "closed": true
+    },
+    {
+      "day": "Tuesday",
+      "short": "Tu",
+      "open": "12:00",
+      "close": "21:30"
+    },
+    {
+      "day": "Wednesday",
+      "short": "We",
+      "open": "12:00",
+      "close": "21:30"
+    },
+    {
+      "day": "Thursday",
+      "short": "Th",
+      "open": "12:00",
+      "close": "21:30"
+    },
+    {
+      "day": "Friday",
+      "short": "Fr",
+      "open": "12:00",
+      "close": "23:00"
+    },
+    {
+      "day": "Saturday",
+      "short": "Sa",
+      "open": "12:00",
+      "close": "23:00"
+    },
+    {
+      "day": "Sunday",
+      "short": "Su",
+      "open": "12:00",
+      "close": "22:00"
+    }
+  ],
+  "priceRange": "$$",
+  "rating": {
+    "value": "4.8",
+    "count": 184
+  },
+  "links": {
+    "order": "https://pos.chowbus.com/online-ordering/store/Yang-Smokehouse/24035",
+    "reserve": "https://reservation.chowbus.com/restaurant/9195b4d4-d621-420e-af2a-aeda8fd2795b",
+    "maps": "https://maps.google.com/?cid=5286791210683047439",
+    "directions": "https://www.google.com/maps/dir/?api=1&destination=Yangs+Smokehouse%2C+240+Legacy+Dr+%23306%2C+Plano%2C+TX+75023",
+    "reviews": "https://maps.google.com/?cid=5286791210683047439",
+    "mapEmbed": "https://www.google.com/maps?q=Yangs+Smokehouse,+240+Legacy+Dr+%23306,+Plano,+TX+75023&z=16&output=embed",
+    "press": "https://dallas.culturemap.com/news/restaurants-bars/yangs-smokehouse-plano-chinese/"
+  },
+  "social": [
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com/yangsmokehouse"
+    },
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com/share/1CGtjbwE8x/"
+    },
+    {
+      "name": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/user/profile/644c7e9b000000002901427b"
+    }
+  ],
+  "promo": {
+    "active": true,
+    "expires": "2027-01-31",
+    "short": "$5 off $35 with our H-E-B Allen coupon",
+    "title": "Find our coupon at H-E-B Allen",
+    "body": "Look for our ad at H-E-B, 575 E. Exchange Pkwy in Allen: $5 off any $35 purchase, plus free delivery on online orders of $38 or more. One coupon per customer. Can't be combined with other offers. Good through January 31, 2027."
+  },
+  "reviews": [
+    {
+      "author": "Wei-Ting Chang",
+      "text": "Great Chinese BBQ with authentic flavors. I personally love the lamb and beef skewers, perfect with their homemade chili powder. BBQ lovers must try it! I also recommend their crunch rice bowl, really savory and delicious."
+    },
+    {
+      "author": "Clinton Dixon",
+      "text": "The service was outstanding, the food came out incredibly fast, and everything tasted fresh. Being able to watch the food cooked over an open fire adds to the whole experience and gives it an awesome smoky flavor."
+    },
+    {
+      "author": "Y Sun",
+      "text": "Very authentic Chinese BBQ with a traditional open-fire grilling style that really brings out the flavor of the meat. The seasoning of their skewers was really delicious."
+    }
+  ],
+  "locations": [
+    {
+      "name": "Plano, TX",
+      "street": "240 Legacy Dr #306",
+      "cityLine": "Plano, TX 75023",
+      "order": "https://pos.chowbus.com/online-ordering/store/Yang-Smokehouse/24035"
+    }
+  ]
+}
