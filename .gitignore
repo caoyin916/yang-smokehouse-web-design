@@ -1,4 +1,3 @@
 .work/
 .playwright-mcp/
 node_modules/
-dist/

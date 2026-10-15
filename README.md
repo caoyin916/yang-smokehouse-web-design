@@ -56,6 +56,8 @@ A new dish shows up with an auto-generated name. Add a line to `NAMES` in `norma
 
 The site currently runs on Wix. To switch:
 
+`dist/` is committed, so it can be uploaded as-is. After any edit, run `node build.mjs` and commit the updated `dist/` too.
+
 1. Deploy `dist/` to a static host such as Cloudflare Pages, Netlify or Hostinger. On Netlify and Cloudflare Pages, `_headers` (caching) and `_redirects` (old Wix URLs) take effect automatically.
 2. Point `www.yangsmokeco.com` at the new host, and redirect the bare `yangsmokeco.com` to `www`.
 3. In Google Search Console, submit `https://www.yangsmokeco.com/sitemap.xml`. The existing site-verification tag is kept in every page.
