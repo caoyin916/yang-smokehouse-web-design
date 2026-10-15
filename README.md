@@ -63,6 +63,18 @@ The site currently runs on Wix. To switch:
 3. In Google Search Console, submit `https://www.yangsmokeco.com/sitemap.xml`. The existing site-verification tag is kept in every page.
 4. In Google Business Profile, keep the website set to `https://www.yangsmokeco.com/` and add `/menu/` as the menu link.
 
+## Preview on GitHub Pages
+
+`.github/workflows/pages.yml` publishes a preview to **https://caoyin916.github.io/yang-smokehouse-web-design/** on every push to `main`.
+
+- **One-time setup:** in the GitHub repo, go to Settings → Pages → Build and deployment and set Source to **GitHub Actions**.
+- The workflow builds with `BASE_PATH=/yang-smokehouse-web-design` (GitHub serves project sites under the repo name) and `PREVIEW=1`. Preview mode marks every page `noindex`, and `robots.txt` blocks crawlers, so the preview never competes in Google with www.yangsmokeco.com.
+- The committed `dist/` is unaffected; it's always built for the real domain.
+- To test the preview build locally (in Git Bash, set `MSYS_NO_PATHCONV=1` first):
+  `BASE_PATH=/yang-smokehouse-web-design PREVIEW=1 node build.mjs`
+
+**Using GitHub Pages for the real domain later:** in `pages.yml`, remove the three `env` values and add a `CNAME` file containing `www.yangsmokeco.com` to `src/static/`. Then set the custom domain under Settings → Pages and point DNS at GitHub (a `CNAME` record for `www` → `caoyin916.github.io`).
+
 ## SEO built in
 
 - Every page is fully rendered HTML: all 134 dishes, prices and descriptions are readable without JavaScript.

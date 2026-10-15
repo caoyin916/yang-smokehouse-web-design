@@ -10,7 +10,16 @@ const OUT = path.join(ROOT, "dist");
 const site = JSON.parse(fs.readFileSync(path.join(SRC, "data/site.json"), "utf8"));
 const menu = JSON.parse(fs.readFileSync(path.join(SRC, "data/menu.json"), "utf8"));
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
-const U = site.url;
+// Optional env for hosting under a sub-path, e.g. a GitHub Pages project site:
+//   SITE_URL=https://user.github.io/repo BASE_PATH=/repo PREVIEW=1 node build.mjs
+// PREVIEW=1 marks every page noindex so a preview never competes with the real domain.
+const BASE = (process.env.BASE_PATH || "").replace(/\/+$/, "");
+const PREVIEW = !!process.env.PREVIEW;
+const U = (process.env.SITE_URL || site.url).replace(/\/+$/, "");
+/** Prefix root-relative URLs in generated HTML with BASE. */
+const rebase = (html) => !BASE ? html : html
+  .replace(/(\s(?:href|src|data-lightbox|action)=")\/(?!\/)/g, `$1${BASE}/`)
+  .replace(/(\s(?:srcset|imagesrcset)=")([^"]*)"/g, (_, a, v) => a + v.split(",").map((x) => x.trim().replace(/^\/(?!\/)/, `${BASE}/`)).join(", ") + '"');
 
 /* ---------------- helpers ---------------- */
 const esc = (s = "") => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -103,7 +112,7 @@ const NAV = [["Home", "/", "首页"], ["Menu", "/menu/", "菜单"], ["Our story"
 function layout({ path: p, title, description, body, ld = [], dishData = null, preload = "", ogImage = "/og-image.jpg" }) {
   const canonical = `${U}${p}`;
   const graph = { "@context": "https://schema.org", "@graph": [restaurantLD, websiteLD, ...ld] };
-  const config = { hours: site.hours, timezone: site.timezone, email: site.email };
+  const config = { hours: site.hours, timezone: site.timezone, email: site.email, base: BASE };
   const nav = NAV.map(([n, href]) => `<a href="${href}"${p === href ? ' aria-current="page"' : ""}>${n}</a>`).join("");
   return `<!doctype html>
 <html lang="en-US">
@@ -740,8 +749,8 @@ fs.cpSync(path.join(SRC, "assets"), path.join(OUT, "assets"), { recursive: true 
 fs.cpSync(path.join(SRC, "static"), OUT, { recursive: true });
 
 for (const pg of pages) {
-  let html = layout(pg);
-  if (pg.noindex) html = html.replace('content="index, follow, max-image-preview:large"', 'content="noindex"');
+  let html = rebase(layout(pg));
+  if (pg.noindex || PREVIEW) html = html.replace('content="index, follow, max-image-preview:large"', 'content="noindex"');
   const file = pg.path.endsWith(".html") ? path.join(OUT, pg.path) : path.join(OUT, pg.path, "index.html");
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, html);
@@ -752,9 +761,10 @@ fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="U
 ${indexable.map((p) => `  <url><loc>${U}${p.path}</loc><lastmod>${BUILD_DATE}</lastmod><priority>${p.path === "/" ? "1.0" : p.path === "/menu/" ? "0.9" : "0.7"}</priority>${p.path === "/menu/" ? Object.values(items).filter((d) => d.img).map((d) => `<image:image><image:loc>${U}/assets/img/menu/${d.img}-1200.webp</image:loc></image:image>`).join("") : ""}</url>`).join("\n")}
 </urlset>
 `);
-fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${U}/sitemap.xml\n`);
-fs.writeFileSync(path.join(OUT, "site.webmanifest"), JSON.stringify({ name: site.name, short_name: "Yang's", start_url: "/", display: "standalone", background_color: "#1e1512", theme_color: "#1e1512", icons: [{ src: "/icon-192.png", sizes: "192x192", type: "image/png" }, { src: "/icon-512.png", sizes: "512x512", type: "image/png" }] }, null, 2));
+fs.writeFileSync(path.join(OUT, "robots.txt"), PREVIEW ? "User-agent: *\nDisallow: /\n" : `User-agent: *\nAllow: /\n\nSitemap: ${U}/sitemap.xml\n`);
+fs.writeFileSync(path.join(OUT, ".nojekyll"), ""); // GitHub Pages: serve files as-is
+fs.writeFileSync(path.join(OUT, "site.webmanifest"), JSON.stringify({ name: site.name, short_name: "Yang's", start_url: `${BASE}/`, display: "standalone", background_color: "#1e1512", theme_color: "#1e1512", icons: [{ src: `${BASE}/icon-192.png`, sizes: "192x192", type: "image/png" }, { src: `${BASE}/icon-512.png`, sizes: "512x512", type: "image/png" }] }, null, 2));
 // Netlify / Cloudflare Pages: long cache for images, revalidate HTML; old Wix URLs redirect home.
 fs.writeFileSync(path.join(OUT, "_headers"), `/assets/img/*\n  Cache-Control: public, max-age=31536000, immutable\n/assets/css/*\n  Cache-Control: public, max-age=31536000, immutable\n/assets/js/*\n  Cache-Control: public, max-age=31536000, immutable\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n`);
 fs.writeFileSync(path.join(OUT, "_redirects"), `/book-online  ${site.links.reserve}  302\n/members  /  301\n/my-subscriptions  /  301\n/about  /our-story/  301\n/menu.html  /menu/  301\n`);
-console.log(`Built ${pages.length} pages, ${Object.keys(items).length} dishes -> dist/`);
+console.log(`Built ${pages.length} pages, ${Object.keys(items).length} dishes -> dist/${BASE ? ` (base path ${BASE})` : ""}${PREVIEW ? " [preview: noindex]" : ""}`);

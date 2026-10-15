@@ -13,8 +13,10 @@ walk(DIST);
 
 let problems = 0;
 const fail = (page, msg) => { problems++; console.log(`  ✗ ${path.relative(DIST, page)}: ${msg}`); };
+const BASE = (process.env.BASE_PATH || "").replace(/\/+$/, "");
 const exists = (url) => {
-  const clean = decodeURI(url.split(/[?#]/)[0]);
+  if (BASE && !url.startsWith(BASE + "/")) return false; // a root link that escaped the base path
+  const clean = decodeURI(url.split(/[?#]/)[0]).slice(BASE.length);
   const p = path.join(DIST, clean);
   return fs.existsSync(p) && (fs.statSync(p).isFile() || fs.existsSync(path.join(p, "index.html")));
 };
@@ -40,7 +42,7 @@ for (const page of pages) {
     .filter((u) => u.startsWith("/") && !u.startsWith("//"));
   for (const u of new Set(refs)) if (!exists(u)) fail(page, "broken link: " + u);
   // dish deep links must point at real dishes
-  for (const m of html.matchAll(/href="\/menu\/#dish-([^"]+)"/g)) {
+  for (const m of html.matchAll(/href="[^"]*\/menu\/#dish-([^"]+)"/g)) {
     const menuHtml = fs.readFileSync(path.join(DIST, "menu/index.html"), "utf8");
     if (!menuHtml.includes(`data-dish="${m[1]}"`)) fail(page, "dish link to missing dish: " + m[1]);
   }

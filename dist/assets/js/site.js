@@ -171,8 +171,9 @@
     media.querySelectorAll("img, .sheet__brush").forEach((n) => n.remove());
     if (d.img) {
       const img = new Image();
-      img.src = `/assets/img/menu/${d.img}-1200.webp`;
-      img.srcset = `/assets/img/menu/${d.img}-640.webp 640w, /assets/img/menu/${d.img}-1200.webp 1200w`;
+      const dir = `${config.base || ""}/assets/img/menu/${d.img}`;
+      img.src = `${dir}-1200.webp`;
+      img.srcset = `${dir}-640.webp 640w, ${dir}-1200.webp 1200w`;
       img.sizes = "(max-width: 640px) 100vw, 560px";
       img.alt = d.en;
       img.width = 1200; img.height = 930;
